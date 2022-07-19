@@ -8,6 +8,8 @@ querySelectorAll returns a list of elements that matches the selector
 
 */
 
+/*1. ---------------- A chaque element qui a pour attribut '.important', ajouter l'attribut '.title' avec pour valeur "This is an important item" -------------------------*/
+
 const importantAnchor = document.querySelectorAll(".important");
 
 importantAnchor.forEach(function (element) {
@@ -15,10 +17,9 @@ importantAnchor.forEach(function (element) {
 });
 console.log(importantAnchor);
 
-/* A chaque element qui a pour attribut '.important', ajouter l'attribut '.title' avec pour valeur "This is an important item" */
-/*https://stackoverflow.com/questions/68889832/how-to-add-attribute-to-child-element-a-using-javascript */
+/*RESSOURCES: https://stackoverflow.com/questions/68889832/how-to-add-attribute-to-child-element-a-using-javascript */
 
-/*------------------------Select all the img tags and loop through them. If they have no important class, turn their display property to none---------------------------------*/
+/*2.------------------------Select all the img tags and loop through them. If they have no important class, turn their display property to none---------------------------------*/
 
 const pics = document.querySelectorAll("img");
 
@@ -29,9 +30,9 @@ for (let elt of pics) {
 }
 
 /* =========> tag.style.class = "value"; ==> ajoute une classe et une valeur à l'élément sélectionné
-/!\ .classList.contains ==> classList (majuscule importante!!!) */
+ATTENTION: "".classList.contains" ==> classList (majuscule importante!!!) */
 
-/* -------------------------Loop through all the paragraphs and display their content in the console. If the paragraph has a class, display its classname as well-------------------------*/
+/*3. -------------------------Loop through all the paragraphs and display their content in the console. If the paragraph has a class, display its classname as well-------------------------*/
 
 let paragraphs = document.querySelectorAll("p");
 
@@ -45,7 +46,7 @@ for (let eachparagraph of paragraphs) {
   }
 }
 
-/*--------------------------- Give each of the paragraph a random text color (different for each one) UNLESS it has a class then leave it as it is. ---------------------------*/
+/*4.--------------------------- Give each of the paragraph a random text color (different for each one) UNLESS it has a class then leave it as it is. ---------------------------*/
 
 /*function generateRandomColor() {
   let baseColor = 0xffffff; // 16777215
@@ -64,5 +65,5 @@ for (let eachparagraph of paragraphs) {
 }
 /* ===============> la variable random doit être DANS le if sinon la même couleur est appliquée à tous les paragraphes)*/
 
-/*https://www.educative.io/answers/how-to-generate-a-random-color-in-javascript*/
-/*https://css-tricks.com/snippets/javascript/random-hex-color/*/
+/*RESSOURCES: https://www.educative.io/answers/how-to-generate-a-random-color-in-javascript */
+/*RESSOURCES: https://css-tricks.com/snippets/javascript/random-hex-color/*/

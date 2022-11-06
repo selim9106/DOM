@@ -19,7 +19,7 @@ let thirdtitle = titles[2];
 secondsection.insertAdjacentElement("afterbegin", thirdtitle);
 thirdsection.insertAdjacentElement("afterbegin", secondtitle);
 
-// todo: remove the footer part
+// todo: remove the footer part:
 let footer = document.querySelector("footer");
 footer.remove();
 

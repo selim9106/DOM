@@ -134,7 +134,7 @@ let body = document.querySelector("body");
 
 /**
  * Update element background & text color depending on user's choice
- * @param {htmlselectelement} selecttag 
+ * @param {htmlselectelement} selecttag git rm -r --cached .
  * @param {htmlelement} elementtoupdate 
  * @returns 
  */

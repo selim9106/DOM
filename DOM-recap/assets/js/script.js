@@ -1,152 +1,152 @@
-// 1. Use childNodes to list all the children from the <ul>
+let list = document.querySelector("ul");
+let listitems = list.childNodes;
+// !: childNodes includes non-element nodes like text and comment
 
-let movieslist = document.querySelector("ul");
-let movies = movieslist.childNodes;
+let movies = [...listitems].filter(movie => movie.nodeType === 1);
+// info: where 1 === Node.ELEMENT_NODE;
 
-//  transformer la liste de nodes en éléments ==>
-let moviestoarray = [...movies].filter(element => {
-    return element.nodeType === Node.ELEMENT_NODE
-});
+removeDuplicates(movies);
 
-
-
-// 7. Create a new <div> before the list, using createElement and insertBefore
-
-let newDiv = document.createElement("div");
-movieslist.parentNode.insertBefore(newDiv, movieslist);
-
-// 8. create a <select> tag into the <div>, with two <option>s: "important franchises" and "normal franchises"
-let newlabel = document.createElement("label");
-newlabel.setAttribute("for", "choice");
-newlabel.innerText += "Make a choice : ";
-
-newDiv.appendChild(newlabel);
-let selection = document.createElement("select");
-newDiv.appendChild(selection);
-
-
-let importantfranchises = document.createElement("option");
-importantfranchises.setAttribute("value", "importantfranchises");
-importantfranchises.innerText += "Important franchises";
-
-let normalfranchises = document.createElement("option");
-normalfranchises.setAttribute("value", "normalfranchises");
-normalfranchises.innerText += "Normal franchises";
-
-selection.appendChild(importantfranchises);
-selection.appendChild(normalfranchises);
-
-
-
-    // 2. Write a for loop to iterate over every child
-
-    for (let i=0; i<movies.length; i++) {
-
-        // 3. Use a condition in the loop to only iterate over element nodes 
-
-        if (movies[i].nodeType === Node.ELEMENT_NODE) {
-
-            let movie = movies[i];
-
-            
-            // 4. Find the element that contains Fast and Furious. If it's not the first element move it to the top of the list. 
-
-            if (movie.textContent.includes("Furious")) {
-
-                const fastandfurious = movie;
-
-                if (fastandfurious !== movies[0]) {
-
-                    let firstitem = movies[0];
-
-                    fastandfurious.parentNode.removeChild(fastandfurious);
-                    firstitem.parentNode.insertBefore(fastandfurious, firstitem);
-
-                    // 5. Add a class "".important" to the  F&F element
-
-                    fastandfurious.classList.add("important");
-
-                };
-
-    
-            };
-
-            //6. Add an eventListener on every item so if the item is clicked an alert() pops up to display the name of clicked element ==> see function displayName below
-            movie.addEventListener("click", displayName);
-
-            // NE PAS DEFINIR selection.addEventListener("change", selectFranchise);
-
-
-        
-        };
-
-    }; 
-
-
-//9. Add an eventListener to the <select>, on change, if option "important franchise" is chosen, only display items of the list that have the class .important. (tip: toggle visibility with element.style.visibility = 'hidden')
-// ==> Not in the loop,here, otherwise, the addeventlistener will loop through i<movies.length times
-
-selection.addEventListener("change", (e) => { 
-
-    if (e.target.value == "importantfranchises") {
-
-            moviestoarray.forEach(movie => {
-                //  /!\ le "movie" ici n'a rien a voir avec le 'movie' de la boucle
-                // solution avec if else ===>
-
-                // if (movie.classList.contains("important")) {
-                //     movie.style.visibility = 'visible';
-                // }
-                // else {
-                //     movie.style.visibility = 'hidden';
-                // }
-
-                // -----------------------------------------------
-
-                // SOLUTION WITH TERNARY OPERATOR/GUARD CLOSE:
-
-                movie.classList.contains("important") ? movie.style.visibility = 'visible' : movie.style.visibility = 'hidden';
-            })
+/**
+ * 
+ * @param {array} array 
+ * @returns a shallow copy which contains only unique values
+ */
+function removeDuplicates(array) {
+    return array.filter(function(item,index) {
+        for(let i=0; i<index; i++) {
+            if (item.isEqualNode(array[i])) {
+                item.remove();
+            }
         }
-        
-    if (e.target.value == "normalfranchises") {
-        moviestoarray.forEach(movie => {
-            movie.classList.contains("important") ? movie.style.visibility = 'hidden' : movie.style.visibility = 'visible';
-        
-        })
-    }
+    });
+}
 
+
+/**
+ * Move an list element to the top + add class
+ * alert text when a list element is clicked
+ */
+movies.forEach(function(movie) {
+    if (movie.innerText.includes("Fast")) {
+        list.insertAdjacentElement("afterbegin", movie);
+        movie.classList.add("important");
+    }
+    
+    movie.addEventListener("click", (e) => e.target.innerText.includes("Fast")? alert ("The most important franchise ever, the story of DOM(inic) Toretto's family. It's not about car, it's about family."): alert(e.target.innerText));
 })
 
 
+let body = document.querySelector('body');
+/**
+ * add key events to shuffle content or duplicate the first one
+ */
+body.addEventListener("keydown", (event) =>  { 
+    if(event.key === "r") {
+    shuffleItems(list);
+    } else if (event.key === "d") {
+        let clone = listitems[0].cloneNode(true);
+        list.appendChild(clone);
+    }
+});
 
-// 7 function displayName ( with special condition if the clicked item is Fast and Furious (different content in the alert).
-            
-function displayName(event) { 
-    
-    if (event.target.className !== "important") {
-        alert(event.target.innerText);
-    } 
-    // /!\ pas de ";" entre les conditions if et else
+/**
+ * display shuffled returned elements from shuffle function below
+ * @param {htmllist} list 
+ */
+function shuffleItems(list) {
+   let items = list.children, i=0;
+    //  items = Array.prototype.slice.call(items); same as:
+   items = [...items];
+   items = shuffle(items);
+   while(i<items.length) {
+    list.appendChild(items[i]);
+    ++i;
+   }
+}
 
-    else {
-        alert("The most important franchise ever, the story of DOM(inic) Toretto's family. It's not about car, it's about family");
-    };
+/**
+ * 
+ * @param {array} items 
+ * @returns randomly ordered array
+ * info: .slice(1) excludes first aray item from shuffling
+ */ 
+function shuffle(items) {
+    let cached = items.slice(1), temp, i = cached.length, rand;
+    while(--i)
+    {
+        rand = Math.floor(i * Math.random());
+        temp = cached[rand];
+        cached[rand] = cached[i];
+        cached[i] = temp;
+    }
+    return cached;
+}
 
-};
+insertNewElement("div", list, body);
 
+/**
+ * Create new element and insert it at the top of a parent one
+ * @param {htmlelement} elementype 
+ * @param {htmlelement} nextelement 
+ * @param {htmlelement} parentElt 
+ */
+function insertNewElement(elementype, nextelement, parentElt) {
+    let newelement = document.createElement(elementype);
+    parentElt.insertBefore(newelement, nextelement);
+}
 
+// let selectfield = document.createElement('select');
+// document.querySelector("div").appendChild(selectfield);
 
+let franchises = ["important franchises", "normal franchises"];
+selectInputConfig(document.querySelector("div"), "franchise");
 
-  
+/**
+ * Create select field + insert
+ * @param {htmlelement} parent 
+ * @param {string} name 
+ */
+function selectInputConfig(parent, name) {
+    let selectinput = document.createElement("select");
+    selectinput.setAttribute("name", name);
+    parent.appendChild(selectinput);
+}
 
+addOptions(franchises, "select");
 
-//RESSOURCES:
-// 3. https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType  (tip: Node.ELEMENT_NODE = 1)
-// 4. https://bobbyhadz.com/blog/javascript-find-element-by-content
-// 5. https://stackoverflow.com/questions/27633000/dynamically-move-a-div-above-a-list-element-using-javascript
-// 7. https://www.javascripttutorial.net/javascript-dom/javascript-change-event/
-// 9. https://learningactors.com/javascript-guard-clauses-how-you-can-refactor-conditional-logic/
-// 9. https://ultimatecourses.com/blog/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom#looping-through-nodelists-on-the-fly
+/**
+ * 
+ * @param {array} values 
+ * @param {htmlselecttag} selecttag 
+ */
+function addOptions(values, selecttag) {
+    let selectinput = document.querySelector(selecttag);
 
+    values.forEach((value) => {
+        let newoption = document.createElement("option");
+        newoption.setAttribute("value", value);
+        newoption.innerText = value;
+        selectinput.appendChild(newoption);
+    });
+}
 
+let selectinput = document.querySelector("select");
+selectinput.addEventListener("change",(e) => filterList(e.target.value, movies));
+
+/**
+ * Display or Hide elements depending on option selected
+ * @param {string} value = option value
+ * @param {nodes} items 
+ */
+function filterList(value, items) {
+    switch (value) {
+        case "important franchises": items.forEach(item => item.classList.contains("important")? item.style.display="": item.style.display="none");
+        break;
+        case "normal franchises": items.forEach(item => item.classList.contains("important")? item.style.display="none": item.style.display="");
+        break;
+    }
+}
+
+// info: About shuffle : https://stackoverflow.com/questions/7070054/javascript-shuffle-html-list-element-order
+// info: About Array.slice() && array.splice(): https://dasha.ai/en-us/blog/javascript-arrays-slice-and-splice#:~:text=The%20array%20slice%20javascript%20method,method%20takes%20two%20optional%20arguments.

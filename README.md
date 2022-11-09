@@ -1,5 +1,3 @@
-# DOM
-DOM exercices
 # Dom Manipulation
 
 ## Introduction
